@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sapporo-web-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sapporo-web
+  template:
+    metadata:
+      labels:
+        app: sapporo-web
+    spec:
+      containers:
+      - name: sapporo-web
+        image: docker.io/zenulabidin/sapporo-web:latest
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sapporo-wes-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sapporo-wes
+  template:
+    metadata:
+      labels:
+        app: sapporo-wes
+    spec:
+      containers:
+      - name: sapporo-wes
+        image: docker.io/zenulabidin/sapporo-wes:latest
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tesk-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tesk
+  template:
+    metadata:
+      labels:
+        app: tesk
+    spec:
+      containers:
+      - name: tesk
+        image: docker.io/zenulabidin/tesk:latest
+        ports:
+        - containerPort: 80
