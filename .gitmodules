@@ -1,0 +1,6 @@
+[submodule "modules/sapporo-service"]
+	path = modules/sapporo-service
+	url = https://github.com/AASCTC/sapporo-service
+[submodule "modules/sapporo-web"]
+	path = modules/sapporo-web
+	url = https://github.com/AASCTC/sapporo-web

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aai-container-build
+  labels:
+    app: aai-container-build
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aai-container-build
+  template:
+    metadata:
+      labels:
+        app: aai-container-build
+    spec:
+      containers:
+      - name: sapporo-web
+        # use the Docker image built by the build job
+        image: ghcr.io/AASCTC/sapporo-web:latest
+        ports:
+        - name: http
+          containerPort: 80
+      # define the build job
+      initContainers:
+      - name: sapporo-web
+        image: docker:20.10
+        volumeMounts:
+        - name: sapporo-web-source
+          mountPath: /app
+        command: ['docker']
+        args: ['build', '-t', 'ghcr.io/AASCTC/sapporo-web:latest', '/app/modules/sapporo-web']
+      volumes:
+      - name: sapporo-web-source
+        configMap:
+          name: sapporo-web-source-config
+          items:
+            - key: sapporo-web-source.tar.gz
+              path: sapporo-web.tar.gz
+      - name: sapporo-service
+        # use the Docker image built by the build job
+        image: ghcr.io/AASCTC/sapporo-service:latest
+        ports:
+        - name: ga4gh-workflow
+          containerPort: 1122
+      # define the build job
+      initContainers:
+      - name: sapporo-service
+        image: docker:20.10
+        volumeMounts:
+        - name: sapporo-service-source
+          mountPath: /app
+        command: ['docker']
+        args: ['build', '-t', 'ghcr.io/AASCTC/sapporo-service:latest', '/app/modules/sapporo-service']
+      volumes:
+      - name: sapporo-service-source
+        configMap:
+          name: sapporo-service-source-config
+          items:
+            - key: sapporo-service-source.tar.gz
+              path: sapporo-service.tar.gz

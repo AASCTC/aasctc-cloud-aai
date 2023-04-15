@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: sapporo-web
-        image: docker.io/zenulabidin/sapporo-web:latest
+        image: ghcr.io/AASCTC/sapporo-web:latest
         ports:
         - containerPort: 80
 
@@ -23,41 +23,33 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sapporo-wes-deployment
+  name: sapporo-service-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sapporo-wes
+      app: sapporo-service
   template:
     metadata:
       labels:
-        app: sapporo-wes
+        app: sapporo-service
     spec:
       containers:
       - name: sapporo-wes
-        image: docker.io/zenulabidin/sapporo-wes:latest
+        image: ghcr.io/AASCTC/sapporo-service:latest
         ports:
-        - containerPort: 80
+        - containerPort: 1121
 
 ---
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
 metadata:
-  name: tesk-deployment
+  name: tesk
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tesk
-  template:
-    metadata:
-      labels:
-        app: tesk
-    spec:
-      containers:
-      - name: tesk
-        image: docker.io/zenulabidin/tesk:latest
-        ports:
-        - containerPort: 80
+  chart:
+    repository: https://charts.example.com/
+    name: my-chart
+    version: 1.2.3
+  values:
+    someKey: someValue
